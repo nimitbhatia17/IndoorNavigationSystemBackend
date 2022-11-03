@@ -23,11 +23,17 @@ def getLocationCoordinates(RSSIDict):
 
     return x, y
 
-@app.route('/getUUIDList', methods = ['POST'])
-def getUUIDList():
+@app.route('/getLocation', methods = ['POST'])
+def getLocation():
     data = request.get_json()
     print(data)
     return jsonify({"Yes": "Worked"})
+
+@app.route('/getPath', methods = ['POST'])
+def getPath():
+    data = request.get_json()
+    print(data)
+    return jsonify({"Yes": "Worked for this too"})
 
 if(__name__ == '__main__'):
     print('The server is running...')
