@@ -12,6 +12,6 @@ for i in range(len(dataFile)):
     twoPointList = [leftUpPoint, rightDownPoint]
     drawImage.ellipse(twoPointList, fill=(255,0,0,255))
 
-mapImage.save('/Users/nimitbhatia/Projects/BLECentralApp/Assets/BLEAppMapUpdated.png')
+mapImage.save('/Users/nimitbhatia/Projects/BLECentralAppBackend/static/BLEAppReference.png')
 
 mapImage.show()
