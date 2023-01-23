@@ -75,30 +75,27 @@ def displayPath(vertexList):
     mapImage.save('/Users/nimitbhatia/Projects/BLECentralAppBackend/static/BLEAppMapUpdated.png')
 
 def generateCleanDictionary(rawData):
-    RSSIDict = {'OnePlus Buds Z2': 0, 'Nothing ear (1)': 0, '7D:35:CE:88:FE:92': 0, '6F:B6:B4:D2:8E:63': 0}
+    RSSIDict = {'84:EB:18:08:BB:2E': 0, '84:EB:18:08:BD:2E': 0, '84:EB:18:08:BF:30': 0}
     keyList = list(RSSIDict.keys())
     for i in rawData:
         if i == 'ChoiceValue':
             continue
-        if rawData[i]['name'] == keyList[0] or rawData[i]['name'] == keyList[1]:
-            RSSIDict[rawData[i]['name']] = rawData[i]['rssi']
-        elif rawData[i]['id'] == keyList[-2] or rawData[i]['id'] == keyList[-1]:
+        if rawData[i]['name'] == 'Ghostyu' and (rawData[i]['id'] in keyList):
             RSSIDict[rawData[i]['id']] = rawData[i]['rssi']
     return RSSIDict
 
 def getLocationCoordinates(RSSIDict):
     RSSITable = pd.read_csv('RSSITable.csv')
 
-    targetAP1 = RSSIDict['Nothing ear (1)']
-    targetAP2 = RSSIDict['OnePlus Buds Z2']
-    # targetAP3 = RSSIDict['7D:35:CE:88:FE:92']
-    # targetAP4 = RSSIDict['OnePlus Buds Z2']
+    targetAP1 = RSSIDict['84:EB:18:08:BB:2E']
+    targetAP2 = RSSIDict['84:EB:18:08:BF:30']
+    targetAP3 = RSSIDict['84:EB:18:08:BD:2E']
 
     def applicationFun(row):
         xDist = abs(row['ap1'] - targetAP1)
         yDist = abs(row['ap2'] - targetAP2)
-        # zDist = abs(row['ap3'] - targetAP3)
-        return xDist**2 + yDist**2
+        zDist = abs(row['ap3'] - targetAP3)
+        return xDist**2 + yDist**2 + zDist**2
 
     RSSITable['result'] = RSSITable.apply(applicationFun, axis = 1)
     resultant = RSSITable[RSSITable['result'] == RSSITable['result'].min()]
