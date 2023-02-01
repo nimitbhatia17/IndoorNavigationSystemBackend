@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw
 import pandas as pd
 
-mapImage = Image.open('BLEAppMap.png')
+mapImage = Image.open('FloorMapHostel.png')
 dataFile = pd.read_csv('RSSITable.csv')
 
 drawImage = ImageDraw.Draw(mapImage)  
@@ -12,6 +12,6 @@ for i in range(len(dataFile)):
     twoPointList = [leftUpPoint, rightDownPoint]
     drawImage.ellipse(twoPointList, fill=(255,0,0,255))
 
-mapImage.save('/Users/nimitbhatia/Projects/BLECentralAppBackend/static/BLEAppReference.png')
+mapImage.save('C:/Projects/App development/IndoorNavigationSystemBackend/static/FloorMapReference.png')
 
 mapImage.show()

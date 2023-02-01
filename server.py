@@ -4,15 +4,23 @@ from flask import Flask, jsonify, request
 from PIL import Image, ImageDraw
 from collections import defaultdict
 from rssi import RSSI_Localizer
-
+from flask_pymongo import PyMongo, ObjectId
+from pymongo import MongoClient
+# from dotenv import dotenv;
 app = Flask(__name__)
+
+# client = MongoClient("mongodb+srv://travelgeographic:LibraryNavigationSystem@cluster0.tqtwb.mongodb.net/?retryWrites=true&w=majority")
+# client = MongoClient("cluster0-shard-00-00.tqtwb.mongodb.net:27017", 27017, username= 'travelgeographic', password = 'LibraryNavigationSystem')
+# app.config["MONGO_URI"] = process.env.Mon
+# mongo = PyMongo(app)
+
 
 def buildGraph():
     edges = [
-        [1, 2], [2, 3],
-        [3, 4], [4, 5],
-        [5, 6], [6, 7],
-        [7, 8]
+        [1,2], [2,8],
+        [8,4], [7,6],
+        [4,7], [5,8],
+        [3,4]
     ]
     graph = defaultdict(list)
     
@@ -48,15 +56,15 @@ def shortestPath(graph, start, goal):
     return []
 
 def displayLocation(x, y, r = 10):
-    mapImage = Image.open('BLEAppMap.png')
+    mapImage = Image.open('C:\Projects\App development\IndoorNavigationSystemBackend\static\FloorMapHostel.png')
     drawImage = ImageDraw.Draw(mapImage)  
     twoPointList = [(x - r, y - r), (x + r, y + r)]
-    drawImage.ellipse(twoPointList, fill = (255, 0, 0, 255))
-    mapImage.save('/Users/nimitbhatia/Projects/BLECentralAppBackend/static/BLEAppMapUpdated.png')
+    drawImage.ellipse(twoPointList, fill = (255,0,0,255))
+    mapImage.save('C:/Projects/App development/IndoorNavigationSystemBackend/static/FloorMapUpdated.png')
     return
 
 def displayPath(vertexList):
-    mapImage = Image.open('BLEAppMap.png')
+    mapImage = Image.open('C:/Projects/App development/IndoorNavigationSystemBackend/static/FloorMapHostel.png')
     drawImage = ImageDraw.Draw(mapImage)
     RSSITable = pd.read_csv('RSSITable.csv') 
     for i in range(len(vertexList) - 1):
@@ -64,7 +72,7 @@ def displayPath(vertexList):
         y1 = RSSITable.iloc[vertexList[i] - 1]['y']
         x2 = RSSITable.iloc[vertexList[i + 1] - 1]['x']
         y2 = RSSITable.iloc[vertexList[i + 1] - 1]['y']
-        drawImage.line([(x1, y1), (x2, y2)], fill ="blue", width = 5)
+        drawImage.line([(x1, y1), (x2, y2)], fill ="red", width = 5)
 
     twoPointList = [(RSSITable.iloc[vertexList[0] - 1]['x'] - 10, RSSITable.iloc[vertexList[0] - 1]['y'] - 10), (RSSITable.iloc[vertexList[0] - 1]['x'] + 10, RSSITable.iloc[vertexList[0] - 1]['y'] + 10)]
     drawImage.ellipse(twoPointList, fill = (255, 0, 0, 255))
@@ -72,7 +80,7 @@ def displayPath(vertexList):
     twoPointList = [(RSSITable.iloc[vertexList[-1] - 1]['x'] - 10, RSSITable.iloc[vertexList[-1] - 1]['y'] - 10), (RSSITable.iloc[vertexList[-1] - 1]['x'] + 10, RSSITable.iloc[vertexList[-1] - 1]['y'] + 10)]
     drawImage.ellipse(twoPointList, fill = (255, 0, 0, 255))
 
-    mapImage.save('/Users/nimitbhatia/Projects/BLECentralAppBackend/static/BLEAppMapUpdated.png')
+    mapImage.save('C:/Projects/App development/IndoorNavigationSystemBackend/static/FloorMapUpdated.png')
 
 def generateCleanDictionary(rawData):
     RSSIDict = {'84:EB:18:08:BB:2E': 0, '84:EB:18:08:BD:2E': 0, '84:EB:18:08:BF:30': 0}
@@ -88,8 +96,8 @@ def getLocationCoordinates(RSSIDict):
     RSSITable = pd.read_csv('RSSITable.csv')
 
     targetAP1 = RSSIDict['84:EB:18:08:BB:2E']
-    targetAP2 = RSSIDict['84:EB:18:08:BF:30']
-    targetAP3 = RSSIDict['84:EB:18:08:BD:2E']
+    targetAP2 = RSSIDict['84:EB:18:08:BD:2E']
+    targetAP3 = RSSIDict['84:EB:18:08:BF:30']
 
     def applicationFun(row):
         xDist = abs(row['ap1'] - targetAP1)
@@ -99,7 +107,6 @@ def getLocationCoordinates(RSSIDict):
 
     RSSITable['result'] = RSSITable.apply(applicationFun, axis = 1)
     resultant = RSSITable[RSSITable['result'] == RSSITable['result'].min()]
-
     return resultant.head(1)['x'], resultant.head(1)['y']
 
 def generatePath(x, y, choice):
@@ -131,6 +138,21 @@ def getPath():
     generatePath(x, y, data['ChoiceValue'])
 
     return jsonify({"Yes": "Worked for this too"})
+
+@app.route("/getBook", methods = ['POST'])
+def search():
+    data=request.get_json()
+    # user_collection = mongo.db.user;
+
+    # user_collection.insertOne({'name':"Alchemist"})
+    # print(lns.Books)
+    # cursor = lns.Books.find({})
+    # for document in cursor:
+    #       print(document)
+    # lns.Books.seinrtOne({'name':"ALchemist"})
+
+    return jsonify(message="success")
+
 
 if(__name__ == '__main__'):
     print('The server is running...')
