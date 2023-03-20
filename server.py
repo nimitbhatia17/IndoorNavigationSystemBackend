@@ -9,7 +9,6 @@ from sqlalchemy.sql import text
 app = Flask(__name__)
 
 
-
 # SQL Alchemy
 
 metadata = MetaData()
@@ -77,18 +76,18 @@ def shortestPath(graph, start, goal):
 
 def displayLocation(x, y, r=10):
     mapImage = Image.open(
-        'C:\Projects\App development\IndoorNavigationSystemBackend\static\FloorMapHostel.png')
+        'C:\Projects\App development\IndoorNavigationSystemBackend\static\PULibraryMap.png')
     drawImage = ImageDraw.Draw(mapImage)
     twoPointList = [(x - r, y - r), (x + r, y + r)]
-    drawImage.ellipse(twoPointList, fill=(255, 0, 0, 255))
+    drawImage.ellipse(twoPointList, fill="red")
     mapImage.save(
-        'C:/Projects/App development/IndoorNavigationSystemBackend/static/FloorMapUpdated.png')
+        'C:/Projects/App development/IndoorNavigationSystemBackend/static/PULibraryMapUpdated.png')
     return
 
 
 def displayPath(vertexList):
     mapImage = Image.open(
-        'C:/Projects/App development/IndoorNavigationSystemBackend/static/FloorMapHostel.png')
+        'C:/Projects/App development/IndoorNavigationSystemBackend/static/PULibraryMap.png')
     drawImage = ImageDraw.Draw(mapImage)
     RSSITable = pd.read_csv('RSSITable.csv')
     for i in range(len(vertexList) - 1):
@@ -100,13 +99,14 @@ def displayPath(vertexList):
 
     twoPointList = [(RSSITable.iloc[vertexList[0] - 1]['x'] - 10, RSSITable.iloc[vertexList[0] - 1]['y'] - 10),
                     (RSSITable.iloc[vertexList[0] - 1]['x'] + 10, RSSITable.iloc[vertexList[0] - 1]['y'] + 10)]
-    drawImage.ellipse(twoPointList, fill=(255, 0, 0, 255))
+    drawImage.ellipse(twoPointList, fill="red")
 
     twoPointList = [(RSSITable.iloc[vertexList[-1] - 1]['x'] - 10, RSSITable.iloc[vertexList[-1] - 1]['y'] - 10),
                     (RSSITable.iloc[vertexList[-1] - 1]['x'] + 10, RSSITable.iloc[vertexList[-1] - 1]['y'] + 10)]
-    drawImage.ellipse(twoPointList, fill=(255, 0, 0, 255))
+    drawImage.ellipse(twoPointList, fill="red")
 
-    mapImage.save('C:/Projects/App development/IndoorNavigationSystemBackend/static/FloorMapUpdated.png')
+    mapImage.save(
+        'C:/Projects/App development/IndoorNavigationSystemBackend/static/PULibraryMapUpdated.png')
 
 
 def generateCleanDictionary(rawData):
@@ -154,7 +154,7 @@ def generatePath(x, y, choice):
 def getLocation():
     data = request.get_json()
     RSSIDict = generateCleanDictionary(data)
-    print(RSSIDict)
+    print("beacon strength",RSSIDict)
     x, y = getLocationCoordinates(RSSIDict)
     displayLocation(x, y)
 
@@ -174,12 +174,15 @@ def getPath():
 
 @app.route("/getBook", methods=['POST'])
 def search():
+    print("reached get book")
     data = request.get_json()
-    query = 'SELECT * FROM book WHERE book_name LIKE "'+data.strip()+ '";'
+    query = 'SELECT * FROM book WHERE book_name LIKE "'+data.strip() + '";'
     sql = text(query)
+    print(sql)
     with engine.connect() as conn:
         result = conn.execute(sql)
     df = pd.DataFrame(result)
+    print(df)
     booksDict = df.to_dict(orient='records')
     return booksDict
 

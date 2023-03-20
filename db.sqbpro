@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Projects/App development/IndoorNavigationSystemBackend/db.sqlite3" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="125"/><column_width id="3" width="1123"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,4:mainbook"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="book" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="52"/><column index="2" value="286"/><column index="4" value="123"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">INSERT INTO book
+VALUES (1, &quot;Anna Karenina&quot;,&quot;Leo Tolstoy&quot;,1),
+        (2,&quot;Madame Bovary&quot;,&quot;Gustave Flaubert&quot;,1),
+        (3,&quot;War and Peace&quot;,&quot;Leo Tolstoy&quot;,2),
+        (4,&quot;The Great Gatsby&quot;,&quot;F. Scott Fitzgerald&quot;,2),
+        (5,&quot;Lolita&quot;,&quot;Vladimir Nabokov&quot;,3),
+        (6,&quot;The Adventures of Huckleberry Finn&quot;,&quot;Mark Twain&quot;,3),
+        (7,&quot;The Stories of Anton Chekhov&quot;,&quot;Anton Chekhov&quot;,4),
+        (8,&quot;Middlemarch&quot;,&quot;George Eliot&quot;,4); </sql><current_tab id="0"/></tab_sql></sqlb_project>
